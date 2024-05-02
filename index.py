@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, g, redirect 
 import sqlite3
+import requests
+import math
 
 app = Flask(__name__)
 database = 'datafile.db'
@@ -11,14 +13,32 @@ def get_db():
 
 @app.teardown_appcontext
 def close_connection(exception):
-    print("我們正在關閉sql connection...")
+    # print("我們正在關閉sql connection...")
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
     
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    conn = get_db()
+    cursor = conn.cursor()
+    result = cursor.execute("select * from cash")
+    cash_result = result.fetchall()
+    #計算台幣與美金的總額
+    taiwanese_dollars = 0
+    us_dollars = 0
+    for data in cash_result:
+        taiwanese_dollars += data[1]
+        us_dollars += data[2]
+    
+    #獲取匯率資訊
+    r = requests.get('https://tw.rter.info/capi.php')
+    currency=r.json()   
+    total = math.floor(taiwanese_dollars + us_dollars * currency['USDTWD']['Exrate'])
+    
+    data = {'total': total, 'currency': currency['USDTWD']['Exrate'], 'ud':us_dollars, 'td':taiwanese_dollars, 'cash_result': cash_result}
+    
+    return render_template('index.html', data = data)
 
 @app.route('/cash')
 def cash_form():

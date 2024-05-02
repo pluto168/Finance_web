@@ -3,11 +3,39 @@
     <h2>現金庫存</h2>
     <table class="table table-bordered">
         <tr>
-            <td>台幣總額: </td>
-            <td>美金總額: </td>
-            <td>今日匯率: </td>
-            <td>現金總額: </td>
+            <td>台幣總額: {{data['td']}} </td>
+            <td>美金總額: {{data['ud']}} </td>
+            <td>今日匯率(全球即時匯率): {{data['currency']}} </td>
+            <td>現金總額: {{data['total']}} </td>
         </tr>
+    </table>
+
+    <h4>現金更動紀錄</h4>
+    <table class = "table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col"台幣</th>
+                <th scope="col">美金</th>
+                <th scope="col">註記</th>
+                <th scope="col">時間</th>
+                <th scope="col">刪除</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in data['cash_result'] %}
+                <tr>
+                    <td>{{data[0]}}</td>
+                    <td>{{data[1]}}</td>
+                    <td>{{data[2]}}</td>
+                    <td>{{data[3]}}</td>
+                    <td>{{data[4]}}</td>
+                    <td>
+                        <button class = "btn-primary">刪除</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
 
