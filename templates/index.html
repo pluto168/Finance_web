@@ -15,7 +15,7 @@
         <thead>
             <tr>
                 <th scope="col">ID</th>
-                <th scope="col"台幣</th>
+                <th scope="col">台幣</th>
                 <th scope="col">美金</th>
                 <th scope="col">註記</th>
                 <th scope="col">時間</th>
@@ -31,9 +31,46 @@
                     <td>{{data[3]}}</td>
                     <td>{{data[4]}}</td>
                     <td>
-                        <button class = "btn-primary">刪除</button>
+                        <form action="/cash-delete" method="post">
+                            <input type="hidden" name="id" value="{{data[0]}}" />
+                            <button class = "btn btn-primary">刪除</button>
+                        </form>
                     </td>
                 </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<hr />
+
+<div id="stock-info">
+    <h2>股票庫存</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">股票代號</th>
+                <th scope="col">持有股數</th>
+                <th scope="col">目前股價</th>
+                <th scope="col">目前市值</th>
+                <th scope="col">股票資產佔比(%)</th>
+                <th scope="col">購買總成本(包含手續費)</th>
+                <th scope="col">平均成本</th>
+                <th scope="col">報酬率(%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in data['stock_info'] %}
+            <tr>
+                <td>{{d['stock_id']}}</td>
+                <td>{{d['shares']}}</td>
+                <td>{{d['current_price']}}</td>
+                <td>{{d['total_value']}}</td>
+                <td>{{d['value_percentage']}}</td>
+                <td>{{d['stock_cost']}}</td>
+                <td>{{d['average_cost']}}</td>
+                <td>{{d['rate_of_return']}}</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
