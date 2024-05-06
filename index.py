@@ -2,6 +2,10 @@ from flask import Flask, render_template, request, g, redirect
 import sqlite3
 import requests
 import math
+import matplotlib
+matplotlib.use('Agg')  # 设置matplotlib不使用任何GUI后端
+import matplotlib.pyplot as plt
+
 
 app = Flask(__name__)
 database = 'datafile.db'
@@ -76,6 +80,24 @@ def home():
         
     for stock in stock_info:
         stock['value_percentage'] = round(stock['total_value'] * 100 / total_stock_value, 2)    
+    
+    #繪製股票圓餅圖
+    if len(unique_stock_list) != 0:
+        labels = tuple(unique_stock_list)
+        size = [d['total_value'] for d in stock_info]
+        fig, ax = plt.subplots(figsize=(6,5))
+        ax.pie(size, labels=labels, autopct = None, shadow=None)
+        fig.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
+        plt.savefig("static/piechart.jpg", dpi=200) 
+        
+    #繪製股票現金圓餅圖
+    if us_dollars != 0 or taiwanese_dollars != 0 or total_stock_value != 0:
+        labels = ('USD', 'TWD', 'Stock')
+        size=(us_dollars * currency['USDTWD']['Exrate'], taiwanese_dollars, total_stock_value)
+        fig, ax = plt.subplots(figsize=(6,5))
+        ax.pie(size, labels=labels, autopct = None, shadow=None)
+        fig.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
+        plt.savefig("static/piechart2.jpg", dpi=200) 
     
     data = {'total': total, 'currency': currency['USDTWD']['Exrate'], 'ud':us_dollars, 'td':taiwanese_dollars, 'cash_result': cash_result,'stock_info':stock_info}
     
