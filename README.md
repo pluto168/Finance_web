@@ -2,6 +2,6 @@
 
 ## 理財網站python
 
-![alt text](static/piechart.png)
+![alt text](static/piechart.jpg)
 
-![alt text](static/piechart2.png)
+![alt text](static/piechart2.jpg)
