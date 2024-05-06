@@ -5,6 +5,7 @@ import math
 import matplotlib
 matplotlib.use('Agg')  # 设置matplotlib不使用任何GUI后端
 import matplotlib.pyplot as plt
+import os
 
 
 app = Flask(__name__)
@@ -89,6 +90,12 @@ def home():
         ax.pie(size, labels=labels, autopct = None, shadow=None)
         fig.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
         plt.savefig("static/piechart.jpg", dpi=200) 
+    else:
+        try:
+            os.remove('static/piechart.jpg')
+        except:
+            pass
+        
         
     #繪製股票現金圓餅圖
     if us_dollars != 0 or taiwanese_dollars != 0 or total_stock_value != 0:
@@ -98,8 +105,15 @@ def home():
         ax.pie(size, labels=labels, autopct = None, shadow=None)
         fig.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
         plt.savefig("static/piechart2.jpg", dpi=200) 
+    else:
+        try:
+            os.remove('static/piechart2.jpg')
+        except:
+            pass
     
-    data = {'total': total, 'currency': currency['USDTWD']['Exrate'], 'ud':us_dollars, 'td':taiwanese_dollars, 'cash_result': cash_result,'stock_info':stock_info}
+    data = { 'show_pic_1': os.path.exists('static/piechart.jpg'),
+            'show_pic_2': os.path.exists('static/piechart2.jpg'),
+        'total': total, 'currency': currency['USDTWD']['Exrate'], 'ud':us_dollars, 'td':taiwanese_dollars, 'cash_result': cash_result,'stock_info':stock_info}
     
     return render_template('index.html', data = data)
 
